@@ -222,7 +222,7 @@ export function DashboardClient({
                               {item.filename}
                             </TableCell>
                             <TableCell className="text-muted-foreground text-sm">
-                              {new Date(item.createdAt).toLocaleDateString()}
+                              {new Date(item.createdAt).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" })}
                             </TableCell>
                             <TableCell>
                               {item.status === "queued" && (

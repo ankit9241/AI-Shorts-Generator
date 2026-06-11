@@ -434,16 +434,13 @@ If no valid clips exist, return [] in JSON format. Also readable by json.loads()
         base_dir = pathlib.Path("/tmp") / run_id
         base_dir.mkdir(parents=True, exist_ok=True)
 
-        # Download video file
         video_path = base_dir / "input.mp4"
         s3_client = boto3.client("s3")
         s3_client.download_file("hack-n-tech-3.0-ai-shorts-generator", s3_key, str(video_path))
 
-        # 1. Transcription
         transcript_segments_json = self.transcribe_video(base_dir, video_path)
         transcript_segments = json.loads(transcript_segments_json)
 
-        # 2. Identify moments for clips
         print("Identifying clip moments")
         identified_moments_raw = self.identify_moments(transcript_segments)
 
@@ -460,7 +457,6 @@ If no valid clips exist, return [] in JSON format. Also readable by json.loads()
 
         print(clip_moments)
 
-        # 3. Process clips
         for index, moment in enumerate(clip_moments[:5]):
             if "start" in moment and "end" in moment:
                 print("Processing clip" + str(index) + " from " +
