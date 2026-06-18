@@ -77,3 +77,26 @@ export async function getClipPlayUrl(
     return { succes: false, error: "Failed to generate play URL." };
   }
 }
+
+export async function deleteUploadedFile(
+  uploadedFileId: string,
+): Promise<{ success: boolean; error?: string }> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  try {
+    await db.uploadedFile.delete({
+      where: {
+        id: uploadedFileId,
+        userId: session.user.id,
+      },
+    });
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: "Failed to delete file from queue." };
+  }
+}

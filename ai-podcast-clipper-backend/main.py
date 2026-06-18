@@ -306,7 +306,7 @@ def process_clip(base_dir: str, original_video_path: str, s3_key: str, start_tim
 
     s3_client = boto3.client("s3")
     s3_client.upload_file(
-        subtitle_output_path, "hack-n-tech-3.0-ai-shorts-generator", output_s3_key)
+        subtitle_output_path, "hack-n-tech-podsnap", output_s3_key)
 
 
 @app.cls(gpu="L40S", timeout=900, retries=0, scaledown_window=20, secrets=[modal.Secret.from_name("ai-podcast-clipper-secret")], volumes={mount_path: volume})
@@ -356,71 +356,96 @@ class AiPodcastClipper:
         duration = time.time() - start_time
         print("Transcription and alignment took " + str(duration) + " seconds")
 
-        segments = []
-
+        word_segments = []
         if "word_segments" in result:
             for word_segment in result["word_segments"]:
                 if "start" not in word_segment or "end" not in word_segment:
                     continue
-                segments.append({
+                word_segments.append({
                     "start": word_segment["start"],
                     "end": word_segment["end"],
                     "word": word_segment.get("word", ""),
                 })
 
-        return json.dumps(segments)
+        phrase_segments = []
+        if "segments" in result:
+            for seg in result["segments"]:
+                if "start" not in seg or "end" not in seg:
+                    continue
+                phrase_segments.append({
+                    "start": seg["start"],
+                    "end": seg["end"],
+                    "text": seg.get("text", ""),
+                })
+
+        return json.dumps({
+            "word_segments": word_segments,
+            "phrase_segments": phrase_segments
+        })
 
     def identify_moments(self, transcript: dict):
-        response = self.gemini_client.models.generate_content(model="gemini-2.5-flash", contents="""
-    You are a clip extraction engine.
+        import time
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                response = self.gemini_client.models.generate_content(model="gemini-2.5-flash", contents="""
+            You are a clip extraction engine.
 
-Input consists of transcript segments. Each segment contains:
+        Input consists of transcript segments. Each segment contains:
 
-* start timestamp
-* end timestamp
-* text
+        * start timestamp
+        * end timestamp
+        * text
 
-Your task is to identify the best podcast moments and return ONLY valid JSON.
+        Your task is to identify the best podcast moments and return ONLY valid JSON.
 
-A valid clip must:
+        A valid clip must:
 
-* Begin with a question or the immediate context leading into the question.
-* End after the corresponding answer is complete.
-* Be between 30 and 60 seconds long.
-* Never exceed 60 seconds.
-* Use only timestamps present in the transcript.
-* Align exactly with transcript segment boundaries.
-* Not overlap with any other returned clip.
+        * Begin with a question or the immediate context leading into the question.
+        * End after the corresponding answer is complete.
+        * Be between 30 and 60 seconds long.
+        * Never exceed 60 seconds.
+        * Use only timestamps present in the transcript.
+        * Align exactly with transcript segment boundaries.
+        * Not overlap with any other returned clip.
 
-Rules:
+        Rules:
 
-* Any clip shorter than 30 seconds is invalid.
-* Any clip longer than 60 seconds is invalid.
-* Prefer clips between 40 and 60 seconds.
-* Prefer complete question-answer exchanges.
-* Prefer stories with a clear beginning and conclusion.
-* Return at most 10 clips.
-* Return only the strongest clips.
+        * Any clip shorter than 30 seconds is invalid.
+        * Any clip longer than 60 seconds is invalid.
+        * Prefer clips between 40 and 60 seconds.
+        * Prefer complete question-answer exchanges.
+        * Prefer stories with a clear beginning and conclusion.
+        * Return at most 10 clips.
+        * Return only the strongest clips.
 
-Output format:
+        Output format:
 
-[
-{
-"start": 123.45,
-"end": 176.82
-}
-]
+        [
+        {
+        "start": 123.45,
+        "end": 176.82
+        }
+        ]
 
-Do not include explanations.
-Do not include markdown.
-Do not include transcript text.
-Do not include any field other than start and end.
+        Do not include explanations.
+        Do not include markdown.
+        Do not include transcript text.
+        Do not include any field other than start and end.
 
-If no valid clips exist, return [] in JSON format. Also readable by json.loads() in Python.
+        If no valid clips exist, return [] in JSON format. Also readable by json.loads() in Python.
 
-    The transcript is as follows:\n\n""" + str(transcript))
-        print(f"Identified moments response: ${response.text}")
-        return response.text
+            The transcript is as follows:\n\n""" + str(transcript))
+                print(f"Identified moments response: ${response.text}")
+                return response.text
+            except Exception as e:
+                print(f"Gemini API call failed (attempt {attempt + 1}/{max_retries}): {e}")
+                if attempt < max_retries - 1:
+                    sleep_time = (2 ** attempt) * 2
+                    print(f"Retrying in {sleep_time} seconds...")
+                    time.sleep(sleep_time)
+                else:
+                    raise e
 
     @modal.fastapi_endpoint(method="POST")
     def process_video(self, request: ProcessVideoRequest, token: HTTPAuthorizationCredentials = Depends(auth_scheme)):
@@ -436,13 +461,20 @@ If no valid clips exist, return [] in JSON format. Also readable by json.loads()
 
         video_path = base_dir / "input.mp4"
         s3_client = boto3.client("s3")
-        s3_client.download_file("hack-n-tech-3.0-ai-shorts-generator", s3_key, str(video_path))
+        s3_client.download_file("hack-n-tech-podsnap", s3_key, str(video_path))
 
         transcript_segments_json = self.transcribe_video(base_dir, video_path)
-        transcript_segments = json.loads(transcript_segments_json)
+        transcript_data = json.loads(transcript_segments_json)
+
+        if isinstance(transcript_data, dict):
+            word_segments = transcript_data.get("word_segments", [])
+            phrase_segments = transcript_data.get("phrase_segments", [])
+        else:
+            word_segments = transcript_data
+            phrase_segments = transcript_data
 
         print("Identifying clip moments")
-        identified_moments_raw = self.identify_moments(transcript_segments)
+        identified_moments_raw = self.identify_moments(phrase_segments)
 
         cleaned_json_string = identified_moments_raw.strip()
         if cleaned_json_string.startswith("```json"):
@@ -462,7 +494,7 @@ If no valid clips exist, return [] in JSON format. Also readable by json.loads()
                 print("Processing clip" + str(index) + " from " +
                       str(moment["start"]) + " to " + str(moment["end"]))
                 process_clip(base_dir, video_path, s3_key,
-                             moment["start"], moment["end"], index, transcript_segments)
+                             moment["start"], moment["end"], index, word_segments)
 
         if base_dir.exists():
             print(f"Cleaning up temp dir after {base_dir}")

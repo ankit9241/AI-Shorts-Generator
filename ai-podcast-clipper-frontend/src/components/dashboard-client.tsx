@@ -12,11 +12,11 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Loader2, UploadCloud } from "lucide-react";
+import { Loader2, Trash2, UploadCloud } from "lucide-react";
 import { useState } from "react";
 import { generateUploadUrl } from "~/actions/s3";
 import { toast } from "sonner";
-import { processVideo } from "~/actions/generation";
+import { deleteUploadedFile, processVideo } from "~/actions/generation";
 import {
   Table,
   TableBody,
@@ -28,6 +28,47 @@ import {
 import { Badge } from "./ui/badge";
 import { useRouter } from "next/navigation";
 import { ClipDisplay } from "./clip-display";
+
+const getStatusConfig = (status: string) => {
+  switch (status) {
+    case "queued":
+      return {
+        label: "Queued",
+        className: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+        description: "Waiting to start..."
+      };
+    case "processing":
+      return {
+        label: "AI Processing",
+        className: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 animate-pulse",
+        description: "AI is transcribing & cropping clips (takes 1-3 mins)..."
+      };
+    case "processed":
+      return {
+        label: "Completed",
+        className: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20",
+        description: "Clips successfully generated!"
+      };
+    case "no credits":
+      return {
+        label: "No Credits",
+        className: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
+        description: "Please buy credits."
+      };
+    case "failed":
+      return {
+        label: "Failed",
+        className: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
+        description: "Error generating clips. Try again."
+      };
+    default:
+      return {
+        label: status,
+        className: "",
+        description: ""
+      };
+  }
+};
 
 export function DashboardClient({
   uploadedFiles,
@@ -46,7 +87,28 @@ export function DashboardClient({
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const router = useRouter();
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to permanently delete this file and all its clips?")) {
+      return;
+    }
+    setDeletingId(id);
+    try {
+      const res = await deleteUploadedFile(id);
+      if (res.success) {
+        toast.success("File permanently deleted");
+        router.refresh();
+      } else {
+        toast.error(res.error || "Failed to delete file");
+      }
+    } catch (e) {
+      toast.error("Failed to delete file");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -65,9 +127,10 @@ export function DashboardClient({
     setUploading(true);
 
     try {
+      const contentType = file.type || "video/mp4";
       const { success, signedUrl, uploadedFileId } = await generateUploadUrl({
         filename: file.name,
-        contentType: file.type,
+        contentType: contentType,
       });
 
       if (!success) throw new Error("Failed to get upload URL");
@@ -76,7 +139,7 @@ export function DashboardClient({
         method: "PUT",
         body: file,
         headers: {
-          "Content-Type": file.type,
+          "Content-Type": contentType,
         },
       });
 
@@ -213,6 +276,7 @@ export function DashboardClient({
                           <TableHead>Uploaded</TableHead>
                           <TableHead>Status</TableHead>
                           <TableHead>Clips created</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -224,23 +288,21 @@ export function DashboardClient({
                             <TableCell className="text-muted-foreground text-sm">
                               {new Date(item.createdAt).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" })}
                             </TableCell>
-                            <TableCell>
-                              {item.status === "queued" && (
-                                <Badge variant="outline">Queued</Badge>
-                              )}
-                              {item.status === "processing" && (
-                                <Badge variant="outline">Processing</Badge>
-                              )}
-                              {item.status === "processed" && (
-                                <Badge variant="outline">Processed</Badge>
-                              )}
-                              {item.status === "no credits" && (
-                                <Badge variant="destructive">No credits</Badge>
-                              )}
-                              {item.status === "failed" && (
-                                <Badge variant="destructive">Failed</Badge>
-                              )}
-                            </TableCell>
+                             <TableCell>
+                               {(() => {
+                                 const config = getStatusConfig(item.status);
+                                 return (
+                                   <div className="flex flex-col gap-1">
+                                     <Badge className={`${config.className} w-fit`} variant="outline">
+                                       {config.label}
+                                     </Badge>
+                                     <span className="text-[11px] text-muted-foreground">
+                                       {config.description}
+                                     </span>
+                                   </div>
+                                 );
+                               })()}
+                             </TableCell>
                             <TableCell>
                               {item.clipsCount > 0 ? (
                                 <span>
@@ -252,6 +314,21 @@ export function DashboardClient({
                                   No clips yet
                                 </span>
                               )}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-destructive hover:bg-destructive/10 hover:text-destructive h-8 w-8 p-0"
+                                onClick={() => handleDelete(item.id)}
+                                disabled={deletingId === item.id}
+                              >
+                                {deletingId === item.id ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="h-4 w-4" />
+                                )}
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}

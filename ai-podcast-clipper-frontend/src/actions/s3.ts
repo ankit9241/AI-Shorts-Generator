@@ -35,7 +35,7 @@ export async function generateUploadUrl(fileInfo: {
   const command = new PutObjectCommand({
     Bucket: env.S3_BUCKET_NAME,
     Key: key,
-    ContentType: fileInfo.contentType,
+    ContentType: fileInfo.contentType || "video/mp4",
   });
 
   const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 600 });
