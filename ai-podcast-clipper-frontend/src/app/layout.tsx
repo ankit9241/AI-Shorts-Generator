@@ -4,8 +4,8 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
 export const metadata: Metadata = {
-  title: "Podcast Clipper",
-  description: "Podcast Clipper",
+  title: "PodSnap - AI Short Clips from Long Videos",
+  description: "Transform your long-form podcast videos into viral short clips with AI. Upload once, get shareable moments instantly.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

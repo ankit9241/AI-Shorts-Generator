@@ -33,6 +33,14 @@ export default async function DashboardPage() {
         },
       },
       clips: {
+        include: {
+          uploadedFile: {
+            select: {
+              id: true,
+              displayName: true,
+            },
+          },
+        },
         orderBy: {
           createdAt: "desc",
         },

@@ -1,6 +1,6 @@
 # PodSnap Codebase Explained: Developer Presentation & Q&A Guide
 
-Welcome to the comprehensive technical documentation for **PodSnap** (AI Podcast Clipper). This guide is designed to help any developer—regardless of their familiarity with this project—understand the system inside and out. By reading this document, you will be able to confidently explain the project's design, answer tough technical questions, and present the system during a hackathon or code review.
+Welcome to the comprehensive technical documentation for **PodSnap** (AI Podcast Clipper). This guide is designed to help any developer-regardless of their familiarity with this project-understand the system inside and out. By reading this document, you will be able to confidently explain the project's design, answer tough technical questions, and present the system during a hackathon or code review.
 
 ---
 

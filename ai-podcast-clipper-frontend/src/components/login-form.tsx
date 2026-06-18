@@ -1,28 +1,14 @@
 "use client";
 
 import { cn } from "~/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import Link from "next/link";
-import {
-  loginSchema,
-  signupSchema,
-  type LoginFormValues,
-  type SignupFormValues,
-} from "~/schemas/auth";
-import { signUp } from "~/actions/auth";
+import { loginSchema, type LoginFormValues } from "~/schemas/auth";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -44,20 +30,18 @@ export function LoginForm({
     try {
       setIsSubmitting(true);
       setError(null);
-
       const signInResult = await signIn("credentials", {
         email: data.email,
         password: data.password,
         redirect: false,
       });
-
       if (signInResult?.error) {
         setError("Invalid email or password.");
       } else {
         router.push("/dashboard");
       }
-    } catch (error) {
-      setError("An unexpected error occured");
+    } catch {
+      setError("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
     }
@@ -65,65 +49,86 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to log in to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email.message}</p>
-                )}
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  {...register("password")}
-                />
-                {errors.password && (
-                  <p className="text-sm text-red-500">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
+      <div className="mb-2">
+        <h1 className="mb-1 text-2xl font-bold tracking-tight" style={{ color: "#1C1917" }}>
+          Welcome back
+        </h1>
+        <p className="text-sm" style={{ color: "#9C8B75" }}>
+          Sign in to your PodSnap account
+        </p>
+      </div>
 
-              {error && (
-                <p className="rounded-md bg-red-50 p-3 text-sm text-red-500">
-                  {error}
-                </p>
-              )}
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="email" className="text-sm font-medium" style={{ color: "#6B5B45" }}>
+            Email
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            required
+            {...register("email")}
+            style={{
+              background: "#FFFFFF",
+              border: "1px solid #E8DFD0",
+              color: "#1C1917",
+              borderRadius: "0.625rem",
+            }}
+          />
+          {errors.email && (
+            <p className="text-xs" style={{ color: "#C0392B" }}>{errors.email.message}</p>
+          )}
+        </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Logging in..." : "Log in"}
-              </Button>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/signup" className="underline underline-offset-4">
-                Sign up
-              </Link>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="password" className="text-sm font-medium" style={{ color: "#6B5B45" }}>
+            Password
+          </Label>
+          <Input
+            id="password"
+            type="password"
+            required
+            {...register("password")}
+            style={{
+              background: "#FFFFFF",
+              border: "1px solid #E8DFD0",
+              color: "#1C1917",
+              borderRadius: "0.625rem",
+            }}
+          />
+          {errors.password && (
+            <p className="text-xs" style={{ color: "#C0392B" }}>
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        {error && (
+          <div
+            className="rounded-lg px-4 py-3 text-sm"
+            style={{ background: "#FDF0EE", color: "#C0392B", border: "1px solid #F5C6BE" }}
+          >
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full rounded-xl py-3 text-sm font-semibold transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+          style={{ background: "#8B5E3C", color: "#FFFFFF" }}
+        >
+          {isSubmitting ? "Signing in..." : "Sign In"}
+        </button>
+      </form>
+
+      <p className="text-center text-sm" style={{ color: "#9C8B75" }}>
+        Don&apos;t have an account?{" "}
+        <Link href="/signup" className="font-medium hover:underline" style={{ color: "#8B5E3C" }}>
+          Create one
+        </Link>
+      </p>
     </div>
   );
 }

@@ -24,9 +24,9 @@ export default async function DashboardLayout({
   });
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" style={{ background: "#FAF7F2" }}>
       <NavHeader credits={user.credits} email={user.email} />
-      <main className="container mx-auto flex-1 py-6">{children}</main>
+      <main className="container mx-auto flex-1 px-6 py-8">{children}</main>
       <Toaster />
     </div>
   );

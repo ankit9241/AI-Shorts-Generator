@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,64 +9,85 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "./ui/avatar";
 import { signOut } from "next-auth/react";
-import { useEffect } from "react";
-import { toast } from "sonner";
 
 const NavHeader = ({ credits, email }: { credits: number; email: string }) => {
   return (
-    <header className="bg-background sticky top-0 z-10 flex justify-center border-b">
-      <div className="container flex h-16 items-center justify-between px-4 py-2">
-        <Link href="/dashboard" className="flex items-center">
-          <div className="font-sans text-xl font-medium tracking-tight">
-            <span className="text-foreground">podcast</span>
-            <span className="font-light text-gray-500">/</span>
-            <span className="text-foreground font-light">clipper</span>
+    <header
+      className="sticky top-0 z-10 flex justify-center"
+      style={{
+        background: "#FAF7F2",
+        borderBottom: "1px solid #E8DFD0",
+      }}
+    >
+      <div className="container flex h-14 items-center justify-between px-6">
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <div
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold text-white"
+            style={{ background: "#8B5E3C" }}
+          >
+            P
           </div>
+          <span className="text-base font-semibold tracking-tight" style={{ color: "#1C1917" }}>
+            PodSnap
+          </span>
         </Link>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="secondary"
-              className="h-8 px-3 py-1.5 text-xs font-medium"
-            >
-              {credits} credits
-            </Badge>
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              className="h-8 text-xs font-medium"
-            >
-              <Link href="/dashboard/billing">Buy more</Link>
-            </Button>
+        <div className="flex items-center gap-3">
+          {/* Credits */}
+          <div
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium"
+            style={{ background: "#F5F0E8", color: "#6B5B45", border: "1px solid #E8DFD0" }}
+          >
+            <span style={{ color: "#8B5E3C", fontWeight: 700 }}>{credits}</span>
+            <span>credits</span>
           </div>
 
+          <Link
+            href="/dashboard/billing"
+            className="rounded-lg px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-90"
+            style={{ background: "#8B5E3C", color: "#FFFFFF" }}
+          >
+            Buy More
+          </Link>
+
+          {/* User dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative h-8 w-8 rounded-full p-0"
+              <button
+                className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-opacity hover:opacity-80"
+                style={{ background: "#EDE5D8", color: "#8B5E3C" }}
               >
-                <Avatar>
-                  <AvatarFallback>{email.charAt(0)}</AvatarFallback>
-                </Avatar>
-              </Button>
+                {email.charAt(0).toUpperCase()}
+              </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent
+              align="end"
+              style={{
+                background: "#FFFFFF",
+                border: "1px solid #E8DFD0",
+                borderRadius: "0.75rem",
+                boxShadow: "0 8px 24px rgba(139,94,60,0.10)",
+              }}
+            >
               <DropdownMenuLabel>
-                <p className="text-muted-foreground text-xs">{email}</p>
+                <p className="text-xs" style={{ color: "#9C8B75" }}>{email}</p>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator style={{ background: "#E8DFD0" }} />
               <DropdownMenuItem asChild>
-                <Link href="/dashboard/billing">Billing</Link>
+                <Link
+                  href="/dashboard/billing"
+                  className="cursor-pointer text-sm"
+                  style={{ color: "#1C1917" }}
+                >
+                  Billing
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator style={{ background: "#E8DFD0" }} />
               <DropdownMenuItem
                 onClick={() => signOut({ redirectTo: "/login" })}
-                className="text-destructive cursor-pointer"
+                className="cursor-pointer text-sm"
+                style={{ color: "#C0392B" }}
               >
                 Sign out
               </DropdownMenuItem>
