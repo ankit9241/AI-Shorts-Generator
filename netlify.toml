@@ -1,0 +1,7 @@
+[build]
+  base = "ai-podcast-clipper-frontend"
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
