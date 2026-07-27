@@ -23,7 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "PodSnap - AI Short Clips from Long Videos",
   description: "Transform your long-form podcast videos into viral short clips with AI. Upload once, get shareable moments instantly.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/icon.svg", type: "image/svg+xml" }],
 };
 
 export default function RootLayout({
