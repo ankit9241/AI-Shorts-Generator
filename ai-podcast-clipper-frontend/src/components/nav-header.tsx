@@ -10,15 +10,14 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { signOut } from "next-auth/react";
+import { Logo } from "./logo";
 
 const NavHeader = ({ credits, email }: { credits: number; email: string }) => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-foreground/10 bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-6">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center bg-foreground text-background font-mono font-bold text-sm">
-            P
-          </div>
+          <Logo className="h-6 w-6 text-foreground" />
           <span className="text-lg font-display tracking-tight text-foreground font-semibold">
             PodSnap
           </span>

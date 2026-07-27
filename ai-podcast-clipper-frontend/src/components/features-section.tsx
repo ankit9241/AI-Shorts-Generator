@@ -24,7 +24,7 @@ const features = [
   {
     number: "04",
     title: "Auto-Cropped Shorts",
-    description: "Clips are auto-formatted to vertical 9:16 for Reels, TikTok, and Shorts.",
+    description: "Clips are auto-formatted to vertical 9:16 for Reels, and Shorts.",
     visual: "crop",
   },
   {
@@ -222,9 +222,8 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
   return (
     <div
       ref={cardRef}
-      className={`group relative transition-all duration-700 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-      }`}
+      className={`group relative transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+        }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 py-12 lg:py-20 border-b border-foreground/10">
@@ -232,7 +231,7 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
         <div className="shrink-0">
           <span className="font-mono text-sm text-muted-foreground">{feature.number}</span>
         </div>
-        
+
         {/* Content */}
         <div className="flex-1 grid lg:grid-cols-2 gap-8 items-center">
           <div>
@@ -243,7 +242,7 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
               {feature.description}
             </p>
           </div>
-          
+
           {/* Visual */}
           <div className="flex justify-center lg:justify-end">
             <div className="w-48 h-40 text-foreground">
@@ -287,9 +286,8 @@ export function FeaturesSection() {
             Capabilities
           </span>
           <h2
-            className={`text-4xl lg:text-6xl font-display tracking-tight transition-all duration-700 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`text-4xl lg:text-6xl font-display tracking-tight transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
           >
             Everything you need to go viral.
             <br />

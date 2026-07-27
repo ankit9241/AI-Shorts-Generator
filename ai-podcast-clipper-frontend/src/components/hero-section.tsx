@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { AnimatedSphere } from "./animated-sphere";
 import Link from "next/link";
 
-const words = ["Shorts", "Reels", "TikToks", "Clips"];
+const words = ["Shorts", "Reels", "Clips"];
 
 export function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -58,7 +58,7 @@ export function HeroSection() {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 py-32 lg:py-40">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-32 pb-12 lg:py-40">
         {/* Eyebrow */}
         <div
           className={`mb-8 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
@@ -110,19 +110,19 @@ export function HeroSection() {
 
           {/* CTAs */}
           <div
-            className={`flex flex-col sm:flex-row items-start gap-4 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`flex flex-row items-center gap-3 sm:gap-4 transition-all duration-700 delay-300 w-full flex-wrap sm:flex-nowrap ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
           >
             <Link
               href="/signup"
-              className={`${btnBase} bg-foreground hover:bg-foreground/90 text-background px-8 h-14 rounded-full group`}
+              className={`${btnBase} bg-foreground hover:bg-foreground/90 text-background px-5 sm:px-8 h-12 sm:h-14 text-sm sm:text-base rounded-full group`}
             >
               Start Clipping Free
-              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
               href="/login"
-              className={`${btnBase} border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-14 px-8 rounded-full border-foreground/20 hover:bg-foreground/5`}
+              className={`${btnBase} border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-12 sm:h-14 px-5 sm:px-8 text-sm sm:text-base rounded-full border-foreground/20 hover:bg-foreground/5`}
             >
               Sign In
             </Link>
@@ -132,7 +132,7 @@ export function HeroSection() {
 
       {/* Stats marquee */}
       <div
-        className={`absolute bottom-24 left-0 right-0 transition-all duration-700 delay-500 ${isVisible ? "opacity-100" : "opacity-0"
+        className={`relative lg:absolute mt-8 lg:mt-0 lg:bottom-24 left-0 right-0 transition-all duration-700 delay-500 ${isVisible ? "opacity-100" : "opacity-0"
           }`}
       >
         <div className="flex gap-16 marquee whitespace-nowrap">

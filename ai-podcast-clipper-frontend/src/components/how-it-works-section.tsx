@@ -102,23 +102,23 @@ export function HowItWorksSection() {
         {/* Main content */}
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
           {/* Steps */}
-          <div className="space-y-0">
+          <div className="space-y-0 min-w-0 w-full">
             {steps.map((step, index) => (
               <button
                 key={step.number}
                 type="button"
                 onClick={() => setActiveStep(index)}
-                className={`w-full text-left py-8 border-b border-background/10 transition-all duration-500 group ${
+                className={`w-full text-left py-8 border-b border-background/10 transition-all duration-500 group whitespace-normal block ${
                   activeStep === index ? "opacity-100" : "opacity-40 hover:opacity-70"
                 }`}
               >
-                <div className="flex items-start gap-6">
-                  <span className="font-display text-3xl text-background/30">{step.number}</span>
-                  <div className="flex-1">
+                <div className="flex items-start gap-6 w-full min-w-0">
+                  <span className="font-display text-3xl text-background/30 select-none shrink-0">{step.number}</span>
+                  <div className="flex-1 min-w-0">
                     <h3 className="text-2xl lg:text-3xl font-display mb-3 group-hover:translate-x-2 transition-transform duration-300">
                       {step.title}
                     </h3>
-                    <p className="text-background/60 leading-relaxed">
+                    <p className="text-background/60 leading-relaxed break-words">
                       {step.description}
                     </p>
                     
@@ -140,7 +140,7 @@ export function HowItWorksSection() {
           </div>
 
           {/* Code display */}
-          <div className="lg:sticky lg:top-32 self-start">
+          <div className="lg:sticky lg:top-32 self-start w-full min-w-0">
             <div className="border border-background/10 overflow-hidden">
               {/* Window header */}
               <div className="px-6 py-4 border-b border-background/10 flex items-center justify-between">
@@ -153,12 +153,12 @@ export function HowItWorksSection() {
               </div>
 
               {/* Code content */}
-              <div className="p-8 font-mono text-sm min-h-[280px]">
-                <pre className="text-background/70">
+              <div className="p-8 font-mono text-sm min-h-[280px] overflow-x-auto w-full">
+                <pre className="text-background/70 min-w-0">
                   {steps[activeStep]!.code.split('\n').map((line, lineIndex) => (
                     <div 
                       key={`${activeStep}-${lineIndex}`} 
-                      className="leading-loose code-line-reveal"
+                      className="leading-loose code-line-reveal whitespace-pre"
                       style={{ 
                         animationDelay: `${lineIndex * 80}ms`,
                       }}

@@ -26,7 +26,7 @@ Welcome to the comprehensive technical documentation for **PodSnap** (AI Podcast
 ## 1. High-Level Overview
 
 ### The Problem
-Long-form video podcasts (1-2 hours) represent some of the most educational and engaging content on the internet, but modern social media platforms (TikTok, Instagram Reels, YouTube Shorts) are dominated by vertical, high-energy, short-form clips (30-60 seconds) with dynamic subtitles. 
+Long-form video podcasts (1-2 hours) represent some of the most educational and engaging content on the internet, but modern social media platforms (Instagram Reels, YouTube Shorts) are dominated by vertical, high-energy, short-form clips (30-60 seconds) with dynamic subtitles. 
 Editing long-form horizontal videos into short vertical clips with highlighted speakers is **highly manual and time-consuming**:
 *   Editors must find high-impact moments manually.
 *   They must manually frame and crop the active speaker (pan-and-scan) or stitch split screens.

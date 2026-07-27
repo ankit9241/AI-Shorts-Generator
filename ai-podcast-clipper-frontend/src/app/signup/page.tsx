@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { SignupForm } from "~/components/signup-form";
 import { auth } from "~/server/auth";
 import Link from "next/link";
+import { Logo } from "~/components/logo";
 
 export default async function Page() {
   const session = await auth();
@@ -35,9 +36,7 @@ export default async function Page() {
       {/* Left Panel */}
       <div className="hidden w-1/2 flex-col justify-between p-16 lg:flex border-r border-foreground/10 relative z-10">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center bg-foreground text-background font-mono font-bold text-lg">
-            P
-          </div>
+          <Logo className="h-8 w-8 text-foreground" />
           <span className="text-xl font-display tracking-tight text-foreground font-semibold">
             PodSnap
           </span>
@@ -74,9 +73,7 @@ export default async function Page() {
       <div className="flex w-full flex-col items-center justify-center px-8 lg:w-1/2 relative z-10">
         <div className="w-full max-w-sm">
           <Link href="/" className="mb-10 flex items-center gap-3 lg:hidden">
-            <div className="flex h-8 w-8 items-center justify-center bg-foreground text-background font-mono font-bold text-sm">
-              P
-            </div>
+            <Logo className="h-6 w-6 text-foreground" />
             <span className="text-lg font-display tracking-tight text-foreground font-semibold">
               PodSnap
             </span>

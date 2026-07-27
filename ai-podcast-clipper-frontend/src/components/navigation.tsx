@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { Logo } from "~/components/logo";
 
 const navLinks = [
   { name: "Features", href: "#features" },
@@ -46,7 +47,8 @@ export function Navigation() {
           }`}
         >
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-3 group">
+            <Logo className={`transition-all duration-500 ${isScrolled ? "h-5 w-5" : "h-6 w-6"}`} />
             <span className={`font-display tracking-tight transition-all duration-500 ${isScrolled ? "text-xl" : "text-2xl"}`}>PodSnap</span>
             <span className={`text-muted-foreground font-mono transition-all duration-500 ${isScrolled ? "text-[10px] mt-0.5" : "text-xs mt-1"}`}>TM</span>
           </Link>
@@ -104,7 +106,22 @@ export function Navigation() {
         }`}
         style={{ top: 0 }}
       >
-        <div className="flex flex-col h-full px-8 pt-28 pb-8">
+        <div className="flex flex-col h-full px-8 pt-6 pb-8">
+          {/* Overlay Header Bar */}
+          <div className="flex items-center justify-between h-14 mb-8">
+            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3">
+              <Logo className="h-6 w-6 text-foreground" />
+              <span className="text-xl font-display tracking-tight text-foreground font-semibold">PodSnap</span>
+            </Link>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 text-foreground hover:opacity-80 cursor-pointer"
+              aria-label="Close menu"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
           {/* Navigation Links */}
           <div className="flex-1 flex flex-col justify-center gap-8">
             {navLinks.map((link, i) => (
