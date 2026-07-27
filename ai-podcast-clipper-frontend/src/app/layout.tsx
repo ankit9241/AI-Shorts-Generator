@@ -1,7 +1,24 @@
 import "~/styles/globals.css";
 
-import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import React from "react";
+import type { Metadata } from "next";
+import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+
+const instrumentSans = Instrument_Sans({ 
+  subsets: ["latin"],
+  variable: '--font-instrument'
+});
+
+const instrumentSerif = Instrument_Serif({ 
+  subsets: ["latin"],
+  weight: "400",
+  variable: '--font-instrument-serif'
+});
+
+const jetbrainsMono = JetBrains_Mono({ 
+  subsets: ["latin"],
+  variable: '--font-jetbrains'
+});
 
 export const metadata: Metadata = {
   title: "PodSnap - AI Short Clips from Long Videos",
@@ -9,17 +26,16 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
-
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
-      <body>{children}</body>
+    <html lang="en">
+      <body className={`${instrumentSans.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

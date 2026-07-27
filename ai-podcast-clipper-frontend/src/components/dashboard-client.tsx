@@ -15,17 +15,41 @@ import { ClipDisplay, type ClipWithFile } from "./clip-display";
 const getStatusConfig = (status: string) => {
   switch (status) {
     case "queued":
-      return { label: "Queued", color: "#B5860D", bg: "#FFF8E6", description: "Waiting to start..." };
+      return { 
+        label: "Queued", 
+        colorClass: "text-amber-600 bg-amber-500/10 border-amber-500/20", 
+        description: "Waiting to start..." 
+      };
     case "processing":
-      return { label: "AI Processing", color: "#7A4F2E", bg: "#F5EDE4", description: "Transcribing & generating clips (1–3 mins)..." };
+      return { 
+        label: "AI Processing", 
+        colorClass: "text-blue-600 bg-blue-500/10 border-blue-500/20", 
+        description: "Transcribing & generating clips (1–3 mins)..." 
+      };
     case "processed":
-      return { label: "Completed", color: "#3A7D44", bg: "#EDF7EF", description: "Clips successfully generated!" };
+      return { 
+        label: "Completed", 
+        colorClass: "text-green-600 bg-green-500/10 border-green-500/20", 
+        description: "Clips successfully generated!" 
+      };
     case "no credits":
-      return { label: "No Credits", color: "#C0392B", bg: "#FDF0EE", description: "Please buy credits to process." };
+      return { 
+        label: "No Credits", 
+        colorClass: "text-destructive bg-destructive/10 border-destructive/20", 
+        description: "Please buy credits to process." 
+      };
     case "failed":
-      return { label: "Failed", color: "#C0392B", bg: "#FDF0EE", description: "Error generating clips. Try again." };
+      return { 
+        label: "Failed", 
+        colorClass: "text-destructive bg-destructive/10 border-destructive/20", 
+        description: "Error generating clips. Try again." 
+      };
     default:
-      return { label: status, color: "#9C8B75", bg: "#F5F0E8", description: "" };
+      return { 
+        label: status, 
+        colorClass: "text-muted-foreground bg-foreground/[0.03] border-foreground/10", 
+        description: "" 
+      };
   }
 };
 
@@ -127,18 +151,15 @@ export function DashboardClient({
       {/* Page Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "#1C1917" }}>
+          <h1 className="text-3xl font-display tracking-tight text-foreground font-semibold">
             Dashboard
           </h1>
-          <p className="mt-1 text-sm" style={{ color: "#9C8B75" }}>
+          <p className="mt-1 text-sm text-muted-foreground">
             Upload your podcast and get AI-generated clips instantly
           </p>
         </div>
         <Link href="/dashboard/billing">
-          <button
-            className="rounded-xl px-4 py-2 text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
-            style={{ background: "#8B5E3C", color: "#FFFFFF" }}
-          >
+          <button className="flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 text-sm font-medium h-10 px-5 rounded-full transition-all duration-300 cursor-pointer">
             Buy Credits
           </button>
         </Link>
@@ -146,20 +167,20 @@ export function DashboardClient({
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList
-          className="w-fit rounded-xl p-1"
-          style={{ background: "#F5F0E8", border: "1px solid #E8DFD0" }}
-        >
-          <TabsTrigger value="upload" className="rounded-lg px-5 py-2 text-sm font-medium">
+        <TabsList className="w-fit bg-foreground/[0.03] border border-foreground/10 rounded-full p-1 h-auto">
+          <TabsTrigger 
+            value="upload" 
+            className="rounded-full px-5 py-2 text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+          >
             Upload
           </TabsTrigger>
-          <TabsTrigger value="my-clips" className="rounded-lg px-5 py-2 text-sm font-medium">
+          <TabsTrigger 
+            value="my-clips" 
+            className="rounded-full px-5 py-2 text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+          >
             My Clips
             {clips.length > 0 && (
-              <span
-                className="ml-2 rounded-full px-2 py-0.5 text-xs font-semibold"
-                style={{ background: "#EDE5D8", color: "#8B5E3C" }}
-              >
+              <span className="ml-2 rounded-full px-2 py-0.5 text-xs font-mono bg-foreground/10 text-foreground">
                 {clips.length}
               </span>
             )}
@@ -168,14 +189,11 @@ export function DashboardClient({
 
         {/* Upload Tab */}
         <TabsContent value="upload" className="mt-6">
-          <div
-            className="rounded-2xl border p-6"
-            style={{ background: "#FFFFFF", borderColor: "#E8DFD0", boxShadow: "0 2px 12px rgba(139,94,60,0.06)" }}
-          >
-            <h2 className="mb-1 text-base font-semibold" style={{ color: "#1C1917" }}>
+          <div className="border border-foreground/10 p-8 bg-background">
+            <h2 className="text-lg font-display text-foreground font-semibold">
               Upload Podcast
             </h2>
-            <p className="mb-5 text-sm" style={{ color: "#9C8B75" }}>
+            <p className="mb-6 text-sm text-muted-foreground">
               Upload your audio or video file to generate short clips
             </p>
 
@@ -191,22 +209,21 @@ export function DashboardClient({
               disabled={uploading}
               maxFiles={1}
               dropZoneClassName={`!flex !flex-col !items-center !justify-center !gap-4 !rounded-xl !border-2 !border-dashed !p-12 !text-center !transition-colors !h-56 w-full ${
-                isDragging ? "!bg-[#FAF0E8] !border-[#8B5E3C]" : "!bg-[#FAF7F2] !border-[#D4B896]"
+                isDragging 
+                  ? "!bg-foreground/[0.03] !border-foreground" 
+                  : "!bg-foreground/[0.01] !border-foreground/10 hover:!border-foreground/20"
               }`}
             >
-              {(dropzone: DropzoneState) => (
+              {(_dropzone: DropzoneState) => (
                 <>
-                  <div
-                    className="flex h-14 w-14 items-center justify-center rounded-2xl"
-                    style={{ background: "#F5F0E8" }}
-                  >
-                    <UploadCloud className="h-7 w-7" style={{ color: "#8B5E3C" }} />
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-foreground/[0.03] text-foreground border border-foreground/10">
+                    <UploadCloud className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-medium" style={{ color: "#1C1917" }}>
+                    <p className="font-medium text-foreground">
                       Drag and drop your file
                     </p>
-                    <p className="mt-1 text-sm" style={{ color: "#9C8B75" }}>
+                    <p className="mt-1 text-sm text-muted-foreground">
                       or click to browse - MP4 up to 500MB
                     </p>
                   </div>
@@ -214,13 +231,13 @@ export function DashboardClient({
               )}
             </Dropzone>
 
-            <div className="mt-4 flex items-center justify-between">
+            <div className="mt-6 flex items-center justify-between">
               <div>
                 {files.length > 0 && (
                   <div>
-                    <p className="text-xs font-medium" style={{ color: "#9C8B75" }}>Selected:</p>
+                    <p className="text-xs font-mono text-muted-foreground">Selected:</p>
                     {files.map((file) => (
-                      <p key={file.name} className="mt-0.5 text-sm" style={{ color: "#1C1917" }}>
+                      <p key={file.name} className="mt-0.5 text-sm font-medium text-foreground">
                         {file.name}
                       </p>
                     ))}
@@ -230,8 +247,7 @@ export function DashboardClient({
               <button
                 disabled={files.length === 0 || uploading}
                 onClick={handleUpload}
-                className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
-                style={{ background: "#8B5E3C", color: "#FFFFFF" }}
+                className="flex items-center gap-2 bg-foreground text-background hover:bg-foreground/90 text-sm font-medium h-12 px-6 rounded-full transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
               >
                 {uploading ? (
                   <>
@@ -247,22 +263,15 @@ export function DashboardClient({
 
           {/* Queue Table */}
           {uploadedFiles.length > 0 && (
-            <div
-              className="mt-4 overflow-hidden rounded-2xl border"
-              style={{ background: "#FFFFFF", borderColor: "#E8DFD0", boxShadow: "0 2px 12px rgba(139,94,60,0.06)" }}
-            >
-              <div
-                className="flex items-center justify-between px-6 py-4"
-                style={{ borderBottom: "1px solid #E8DFD0" }}
-              >
-                <h3 className="text-sm font-semibold" style={{ color: "#1C1917" }}>
+            <div className="mt-8 border border-foreground/10 bg-background">
+              <div className="flex items-center justify-between px-6 py-5 border-b border-foreground/10">
+                <h3 className="text-sm font-mono font-semibold text-foreground uppercase tracking-wider">
                   Processing Queue
                 </h3>
                 <button
                   onClick={handleRefresh}
                   disabled={refreshing}
-                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all hover:opacity-80 disabled:opacity-40"
-                  style={{ background: "#F5F0E8", color: "#6B5B45", border: "1px solid #E8DFD0" }}
+                  className="flex items-center gap-1.5 border border-foreground/20 rounded-full px-4 py-1.5 text-xs font-medium hover:bg-foreground/5 transition-all disabled:opacity-40 cursor-pointer"
                 >
                   {refreshing && <Loader2 className="h-3 w-3 animate-spin" />}
                   Refresh
@@ -272,12 +281,11 @@ export function DashboardClient({
               <div className="overflow-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr style={{ borderBottom: "1px solid #F0EBE1" }}>
+                    <tr className="border-b border-foreground/10 bg-foreground/[0.01]">
                       {["File", "Date", "Status", "Clips", ""].map((h) => (
                         <th
                           key={h}
-                          className="px-6 py-3 text-left text-xs font-medium"
-                          style={{ color: "#9C8B75" }}
+                          className="px-6 py-3 text-left text-xs font-mono font-semibold text-muted-foreground uppercase tracking-wider"
                         >
                           {h}
                         </th>
@@ -288,50 +296,43 @@ export function DashboardClient({
                     {uploadedFiles.map((item) => {
                       const config = getStatusConfig(item.status);
                       return (
-                        <tr key={item.id} style={{ borderBottom: "1px solid #FAF7F2" }}>
-                          <td
-                            className="max-w-[200px] truncate px-6 py-4 font-medium"
-                            style={{ color: "#1C1917" }}
-                          >
+                        <tr key={item.id} className="border-b border-foreground/5 last:border-b-0">
+                          <td className="max-w-[200px] truncate px-6 py-5 font-medium text-foreground">
                             {item.filename}
                           </td>
-                          <td className="px-6 py-4 text-xs" style={{ color: "#9C8B75" }}>
+                          <td className="px-6 py-5 text-xs font-mono text-muted-foreground">
                             {new Date(item.createdAt).toLocaleDateString("en-IN", {
                               year: "numeric",
                               month: "short",
                               day: "numeric",
                             })}
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-5">
                             <div className="flex flex-col gap-1">
-                              <span
-                                className="w-fit rounded-full px-2.5 py-0.5 text-xs font-medium"
-                                style={{ background: config.bg, color: config.color }}
-                              >
+                              <span className={`w-fit rounded-full border px-2.5 py-0.5 text-xs font-medium ${config.colorClass}`}>
                                 {config.label}
                               </span>
                               {config.description && (
-                                <span className="text-[11px]" style={{ color: "#9C8B75" }}>
+                                <span className="text-[11px] text-muted-foreground">
                                   {config.description}
                                 </span>
                               )}
                             </div>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-5">
                             {item.clipsCount > 0 ? (
-                              <span className="font-medium" style={{ color: "#8B5E3C" }}>
+                              <span className="font-mono text-sm font-semibold text-foreground">
                                 {item.clipsCount} clip{item.clipsCount !== 1 ? "s" : ""}
                               </span>
                             ) : (
-                              <span style={{ color: "#D4B896" }}>-</span>
+                              <span className="text-muted-foreground/30 font-mono">-</span>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-right">
+                          <td className="px-6 py-5 text-right">
                             <button
                               onClick={() => handleDelete(item.id)}
                               disabled={deletingId === item.id}
-                              className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-red-50 disabled:opacity-40"
-                              style={{ color: "#C0392B" }}
+                              className="inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-destructive/5 text-destructive transition-colors disabled:opacity-40 cursor-pointer"
                             >
                               {deletingId === item.id ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -352,15 +353,12 @@ export function DashboardClient({
 
         {/* Clips Tab */}
         <TabsContent value="my-clips" className="mt-6">
-          <div
-            className="overflow-hidden rounded-2xl border"
-            style={{ background: "#FFFFFF", borderColor: "#E8DFD0", boxShadow: "0 2px 12px rgba(139,94,60,0.06)" }}
-          >
-            <div className="px-6 py-5" style={{ borderBottom: "1px solid #F0EBE1" }}>
-              <h2 className="text-base font-semibold" style={{ color: "#1C1917" }}>
+          <div className="border border-foreground/10 bg-background">
+            <div className="px-6 py-5 border-b border-foreground/10">
+              <h2 className="text-lg font-display text-foreground font-semibold">
                 My Clips
               </h2>
-              <p className="mt-0.5 text-sm" style={{ color: "#9C8B75" }}>
+              <p className="mt-0.5 text-sm text-muted-foreground">
                 View and download your AI-generated clips
               </p>
             </div>

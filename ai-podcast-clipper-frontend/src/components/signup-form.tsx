@@ -55,17 +55,17 @@ export function SignupForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="mb-2">
-        <h1 className="mb-1 text-2xl font-bold tracking-tight" style={{ color: "#1C1917" }}>
+        <h1 className="mb-1 text-2xl font-bold tracking-tight text-foreground">
           Create your account
         </h1>
-        <p className="text-sm" style={{ color: "#9C8B75" }}>
+        <p className="text-sm text-muted-foreground">
           Join PodSnap and start generating clips today
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="email" className="text-sm font-medium" style={{ color: "#6B5B45" }}>
+          <Label htmlFor="email" className="text-sm font-medium text-foreground">
             Email
           </Label>
           <Input
@@ -74,20 +74,15 @@ export function SignupForm({
             placeholder="you@example.com"
             required
             {...register("email")}
-            style={{
-              background: "#FFFFFF",
-              border: "1px solid #E8DFD0",
-              color: "#1C1917",
-              borderRadius: "0.625rem",
-            }}
+            className="bg-background border-foreground/10 text-foreground rounded-full h-12 px-6 focus-visible:ring-foreground/20"
           />
           {errors.email && (
-            <p className="text-xs" style={{ color: "#C0392B" }}>{errors.email.message}</p>
+            <p className="text-xs text-destructive">{errors.email.message}</p>
           )}
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password" className="text-sm font-medium" style={{ color: "#6B5B45" }}>
+          <Label htmlFor="password" className="text-sm font-medium text-foreground">
             Password
           </Label>
           <Input
@@ -95,15 +90,10 @@ export function SignupForm({
             type="password"
             required
             {...register("password")}
-            style={{
-              background: "#FFFFFF",
-              border: "1px solid #E8DFD0",
-              color: "#1C1917",
-              borderRadius: "0.625rem",
-            }}
+            className="bg-background border-foreground/10 text-foreground rounded-full h-12 px-6 focus-visible:ring-foreground/20"
           />
           {errors.password && (
-            <p className="text-xs" style={{ color: "#C0392B" }}>
+            <p className="text-xs text-destructive">
               {errors.password.message}
             </p>
           )}
@@ -111,8 +101,7 @@ export function SignupForm({
 
         {error && (
           <div
-            className="rounded-lg px-4 py-3 text-sm"
-            style={{ background: "#FDF0EE", color: "#C0392B", border: "1px solid #F5C6BE" }}
+            className="rounded-xl px-4 py-3 text-sm bg-destructive/10 text-destructive border border-destructive/20"
           >
             {error}
           </div>
@@ -121,16 +110,15 @@ export function SignupForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-xl py-3 text-sm font-semibold transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
-          style={{ background: "#8B5E3C", color: "#FFFFFF" }}
+          className="w-full bg-foreground text-background font-medium hover:bg-foreground/90 rounded-full h-12 transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? "Creating account..." : "Create Account"}
         </button>
       </form>
 
-      <p className="text-center text-sm" style={{ color: "#9C8B75" }}>
+      <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium hover:underline" style={{ color: "#8B5E3C" }}>
+        <Link href="/login" className="font-medium text-foreground hover:underline">
           Sign in
         </Link>
       </p>

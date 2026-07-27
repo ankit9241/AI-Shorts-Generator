@@ -13,28 +13,40 @@ export default async function Page() {
   }
 
   return (
-    <div className="flex min-h-screen w-full" style={{ background: "#FAF7F2" }}>
-      {/* Left Panel */}
-      <div
-        className="hidden w-1/2 flex-col justify-between p-12 lg:flex"
-        style={{ background: "#F5F0E8", borderRight: "1px solid #E8DFD0" }}
-      >
-        <Link href="/" className="flex items-center gap-2">
+    <div className="flex min-h-screen w-full bg-background noise-overlay relative overflow-hidden">
+      {/* Subtle grid lines background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+        {[...Array(6)].map((_, i) => (
           <div
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white"
-            style={{ background: "#8B5E3C" }}
-          >
+            key={`h-${i}`}
+            className="absolute h-px bg-foreground/10 w-full"
+            style={{ top: `${16.6 * (i + 1)}%` }}
+          />
+        ))}
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={`v-${i}`}
+            className="absolute w-px bg-foreground/10 h-full"
+            style={{ left: `${12.5 * (i + 1)}%` }}
+          />
+        ))}
+      </div>
+
+      {/* Left Panel */}
+      <div className="hidden w-1/2 flex-col justify-between p-16 lg:flex border-r border-foreground/10 relative z-10">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center bg-foreground text-background font-mono font-bold text-lg">
             P
           </div>
-          <span className="text-lg font-semibold" style={{ color: "#1C1917" }}>
+          <span className="text-xl font-display tracking-tight text-foreground font-semibold">
             PodSnap
           </span>
         </Link>
 
         <div>
-          <p className="mb-8 text-3xl font-bold leading-tight" style={{ color: "#1C1917" }}>
+          <h2 className="mb-8 text-4xl font-display tracking-tight text-foreground leading-tight">
             Start turning your best podcast moments into viral content - for free.
-          </p>
+          </h2>
           <div className="space-y-4">
             {[
               "Upload your podcast in any length",
@@ -42,30 +54,30 @@ export default async function Page() {
               "Download clips formatted for every platform",
             ].map((text) => (
               <div key={text} className="flex items-center gap-3">
-                <div
-                  className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full"
-                  style={{ background: "#8B5E3C" }}
-                >
+                <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-foreground text-background">
                   <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                    <path d="M1 4L3.5 6.5L9 1.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M1 4L3.5 6.5L9 1.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <span className="text-sm" style={{ color: "#6B5B45" }}>{text}</span>
+                <span className="text-sm text-muted-foreground">{text}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <p className="text-xs" style={{ color: "#9C8B75" }}>
-          © 2026 PodSnap. All rights reserved.
+        <p className="text-xs text-muted-foreground font-mono">
+          &copy; 2026 PodSnap. All rights reserved.
         </p>
       </div>
 
       {/* Right Panel */}
-      <div className="flex w-full flex-col items-center justify-center px-6 lg:w-1/2">
+      <div className="flex w-full flex-col items-center justify-center px-8 lg:w-1/2 relative z-10">
         <div className="w-full max-w-sm">
-          <Link href="/" className="mb-8 flex items-center gap-2 lg:hidden">
-            <span className="text-lg font-semibold" style={{ color: "#1C1917" }}>
+          <Link href="/" className="mb-10 flex items-center gap-3 lg:hidden">
+            <div className="flex h-8 w-8 items-center justify-center bg-foreground text-background font-mono font-bold text-sm">
+              P
+            </div>
+            <span className="text-lg font-display tracking-tight text-foreground font-semibold">
               PodSnap
             </span>
           </Link>

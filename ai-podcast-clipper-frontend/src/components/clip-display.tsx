@@ -40,12 +40,12 @@ function ClipCard({ clip }: { clip: Clip }) {
   return (
     <div className="flex flex-col gap-3">
       <div
-        className="relative overflow-hidden rounded-xl"
-        style={{ background: "#F5F0E8", aspectRatio: "9/16", border: "1px solid #E8DFD0" }}
+        className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/[0.01] flex items-center justify-center"
+        style={{ aspectRatio: "9/16" }}
       >
         {isLoadingUrl ? (
           <div className="flex h-full w-full items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin" style={{ color: "#8B5E3C" }} />
+            <Loader2 className="h-6 w-6 animate-spin text-foreground" />
           </div>
         ) : playUrl ? (
           <video
@@ -56,15 +56,14 @@ function ClipCard({ clip }: { clip: Clip }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <Play className="h-8 w-8 opacity-30" style={{ color: "#9C8B75" }} />
+            <Play className="h-8 w-8 text-muted-foreground/30" />
           </div>
         )}
       </div>
       <button
         onClick={handleDownload}
         disabled={!playUrl}
-        className="flex w-full items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-medium transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
-        style={{ background: "#F5F0E8", color: "#6B5B45", borderColor: "#E8DFD0" }}
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-foreground/20 bg-background text-foreground hover:bg-foreground/5 py-2.5 text-xs font-semibold transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
       >
         <Download className="h-3.5 w-3.5" />
         Download
@@ -84,16 +83,13 @@ export function ClipDisplay({ clips }: { clips: ClipWithFile[] }) {
   if (clips.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div
-          className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl"
-          style={{ background: "#F5F0E8" }}
-        >
-          <Play className="h-6 w-6" style={{ color: "#D4B896" }} />
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-foreground/[0.03] text-foreground border border-foreground/10">
+          <Play className="h-6 w-6" />
         </div>
-        <p className="text-sm font-medium" style={{ color: "#6B5B45" }}>
+        <p className="text-sm font-semibold text-foreground">
           No clips yet
         </p>
-        <p className="mt-1 text-xs" style={{ color: "#9C8B75" }}>
+        <p className="mt-1 text-xs text-muted-foreground">
           Upload a podcast to start generating clips
         </p>
       </div>
@@ -110,25 +106,19 @@ export function ClipDisplay({ clips }: { clips: ClipWithFile[] }) {
     if (!groupedClips[fileId]) {
       groupedClips[fileId] = { title, clips: [] };
     }
-    groupedClips[fileId].clips.push(clip);
+    groupedClips[fileId]!.clips.push(clip);
   });
 
   return (
     <div className="space-y-10">
       {Object.entries(groupedClips).map(([fileId, group], index, arr) => (
-        <div key={fileId} className="space-y-4">
+        <div key={fileId} className="space-y-5">
           <div className="flex items-center gap-3">
-            <span
-              className="h-2 w-2 rounded-full"
-              style={{ background: "#8B5E3C" }}
-            />
-            <h3 className="text-sm font-semibold tracking-wide uppercase" style={{ color: "#6B5B45" }}>
+            <span className="h-2 w-2 rounded-full bg-foreground" />
+            <h3 className="text-xs font-mono font-semibold tracking-wider uppercase text-foreground">
               {group.title}
             </h3>
-            <span
-              className="text-xs rounded-full px-2 py-0.5 font-medium"
-              style={{ background: "#F5F0E8", color: "#8B5E3C" }}
-            >
+            <span className="text-xs rounded-full px-2.5 py-0.5 font-mono bg-foreground/10 text-foreground">
               {group.clips.length} clip{group.clips.length !== 1 ? "s" : ""}
             </span>
           </div>
@@ -138,7 +128,7 @@ export function ClipDisplay({ clips }: { clips: ClipWithFile[] }) {
             ))}
           </div>
           {index < arr.length - 1 && (
-            <hr style={{ borderColor: "#F5F0E8" }} className="mt-8" />
+            <hr className="border-foreground/10 mt-8" />
           )}
         </div>
       ))}
